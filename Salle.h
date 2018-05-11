@@ -32,12 +32,16 @@ class Salle
         void genererSalle(string code);
         void afficherSalle();
 
+        void changer_coord(int x, int y);
+
         friend void afficher_carte(vector<Salle>* s);
-    protected:
-    private:
+
         vector<Bloc> m_blocs;
         int m_x;
         int m_y;
+
+    protected:
+    private:
 };
 
 #endif // SALLE_H

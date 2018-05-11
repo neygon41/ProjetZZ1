@@ -43,6 +43,12 @@ void Salle::genererSalle(string code)
     }
 }
 
+void Salle::changer_coord(int x, int y)
+{
+    m_x=x;
+    m_y=y;
+}
+
 void Salle::afficherSalle()
 {
     for(unsigned int i = 0 ; i < m_blocs.size() ; i++)
@@ -84,19 +90,19 @@ void afficher_carte(vector<Salle>* s)
             switch(e[j].type)
             {
             case VIDE:
-                t[sal.m_x+e[j].x][sal.m_y+e[j].y]=' ';
+                t[sal.m_x+e[j].x-minx][sal.m_y+e[j].y-miny]=' ';
                 break;
             case AIR:
-                t[sal.m_x+e[j].x][sal.m_y+e[j].y]='.';
+                t[sal.m_x+e[j].x-minx][sal.m_y+e[j].y-miny]='.';
                 break;
             case MUR:
-                t[sal.m_x+e[j].x][sal.m_y+e[j].y]='#';
+                t[sal.m_x+e[j].x-minx][sal.m_y+e[j].y-miny]='#';
                 break;
             case PORTE:
-                t[sal.m_x+e[j].x][sal.m_y+e[j].y]='/';
+                t[sal.m_x+e[j].x-minx][sal.m_y+e[j].y-miny]='/';
                 break;
             default:
-                t[sal.m_x+e[j].x][sal.m_y+e[j].y]='0';
+                t[sal.m_x+e[j].x-minx][sal.m_y+e[j].y-miny]='0';
                 break;
             }
         }
