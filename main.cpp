@@ -63,11 +63,16 @@ void Placement(Salle* p, vector<Salle>* s)
         {
             if (px+e[i].x<maxx && py+e[i].y<maxy)
             {
-                if (t[px+e[i].x-minx][py+e[i].y-miny]!=0)
+                if (t[px+e[i].x-minx][py+e[i].y-miny]==1)
                 {
                     continuer=true;
                 }
             }
+            if ((px+e[i].x-1>=minx && py+e[i].y<maxy && t[px+e[i].x-minx-1][py+e[i].y-miny]==1)
+                || (px+e[i].x+1<maxx && py+e[i].y<maxy && t[px+e[i].x-minx+1][py+e[i].y-miny]==1)
+                || (py+e[i].y-1>=miny && px+e[i].x<maxx && t[px+e[i].x-minx][py+e[i].y-miny-1]==1)
+                || (py+e[i].y+1<maxy && px+e[i].x<maxx && t[px+e[i].x-minx][py+e[i].y-miny+1]==1))
+                    continuer=true;
             i++;
         }
     }
