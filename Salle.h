@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <fstream>
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
@@ -31,6 +32,7 @@ typedef struct
 class Salle
 {
     public:
+        Salle();
         Salle(int x, int y);
         virtual ~Salle();
 
@@ -47,5 +49,8 @@ class Salle
         int m_x;
         int m_y;
 };
+
+Salle random_load(int salle_max, string emplacement, string extension);
+vector<Salle> placer_salles(unsigned int nb_salles);
 
 #endif // SALLE_H
