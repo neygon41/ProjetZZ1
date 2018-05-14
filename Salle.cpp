@@ -43,6 +43,74 @@ void Salle::genererSalle(string code)
     }
 }
 
+void Salle::placement(vector<Salle>* s)
+{
+    int minx=0,miny=0,maxx=0,maxy=0;
+    vector<Bloc> e;
+    for(unsigned int i=0; i<(s->size()); i++)
+    {
+        Salle sal=(*s)[i];
+        e=sal.m_blocs;
+
+        for(unsigned int j=0; j<(e.size()); j++)
+        {
+            minx=min(minx,sal.m_x + e[j].x);
+            maxx=max(maxx,sal.m_x + e[j].x);
+            miny=min(miny,sal.m_y + e[j].y);
+            maxy=max(maxy,sal.m_y + e[j].y);
+        }
+    }
+    //cout << "min x-y "<<minx<<"-"<<miny<<endl<< "max x-y "<<maxx<<"-"<<maxy<<endl;
+    int t[maxx-minx+1][maxy-miny+1];
+    for(int i=0; i<=maxx-minx; i++)
+    {
+        for(int j=0; j<=maxy-miny; j++)
+            t[i][j]=0;
+    }
+    for(unsigned int i=0; i<s->size(); i++)
+    {
+        Salle sal=(*s)[i];
+        cout<<"pos sal:"<<sal.m_x<<" "<<sal.m_y<<endl;
+        e=sal.m_blocs;
+        for(unsigned int j=0; j<(e.size()); j++)
+        {
+            if (e[j].type!=VIDE)
+            {
+                t[sal.m_x+e[j].x-minx][sal.m_y+e[j].y-miny]=1;
+            }
+        }
+    }
+    bool continuer=true;
+    int px,py;
+    e=this->m_blocs;
+
+    while (continuer)
+    {
+        cout<<" essai"<<endl;
+        px=rand()%(-minx+L_M_S+maxx+L_M_S+1)-minx-L_M_S;
+        py=rand()%(-miny+H_M_S+maxy+H_M_S+1)-miny-H_M_S;
+        this->changer_coord(px,py);
+        int i=0;
+        continuer=false;
+        while (i<e.size() && not(continuer))
+        {
+            if (px+e[i].x<maxx && py+e[i].y<maxy)
+            {
+                if (t[px+e[i].x-minx][py+e[i].y-miny]==1)
+                {
+                    continuer=true;
+                }
+            }
+            if ((px+e[i].x-1>=minx && py+e[i].y<maxy && t[px+e[i].x-minx-1][py+e[i].y-miny]==1)
+                || (px+e[i].x+1<maxx && py+e[i].y<maxy && t[px+e[i].x-minx+1][py+e[i].y-miny]==1)
+                || (py+e[i].y-1>=miny && px+e[i].x<maxx && t[px+e[i].x-minx][py+e[i].y-miny-1]==1)
+                || (py+e[i].y+1<maxy && px+e[i].x<maxx && t[px+e[i].x-minx][py+e[i].y-miny+1]==1))
+                    continuer=true;
+            i++;
+        }
+    }
+}
+
 void Salle::changer_coord(int x, int y)
 {
     m_x=x;
