@@ -55,7 +55,6 @@ void Salle::afficherSalle()
         cout << m_blocs[i].type << " " << m_blocs[i].x << " " << m_blocs[i].y << endl;
 }
 
-
 //Fonction amie de Salle
 void afficher_carte(vector<Salle>* s)
 {

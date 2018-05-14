@@ -5,6 +5,11 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <cstdlib>
+#include <ctime>
+
+#define H_M_S 10
+#define L_M_S 10
 
 using namespace std;
 
