@@ -122,6 +122,11 @@ void Salle::changer_coord(int x, int y)
     m_y=y;
 }
 
+void Salle::supprimer_blocs()
+{
+    m_blocs.clear();
+}
+
 void Salle::afficherSalle()
 {
     for(unsigned int i = 0 ; i < m_blocs.size() ; i++)
@@ -187,54 +192,4 @@ void afficher_carte(vector<Salle>* s)
         }
         cout << endl;
     }
-}
-
-Salle random_load(int salle_max, string emplacement, string extension)
-{
-    int num_sal;
-    string nom_fichier, line, code("");
-    Salle sal;
-    ostringstream oss; //Aucune reference aux films
-
-    num_sal = rand()%(salle_max-1)+1;
-    oss << emplacement << num_sal << extension;
-    nom_fichier = oss.str();
-
-    ifstream fic(nom_fichier.c_str(), ios::in);
-    if(fic)
-    {
-        while(getline(fic, line))
-        {
-            line = " "+line;
-            code+=line;
-        }
-        sal.genererSalle(code);
-
-        fic.close();
-    }
-    else
-    {
-        cerr << "Impossible d'ouvrir le fichier " << nom_fichier << endl;
-    }
-
-    return sal;
-}
-
-vector<Salle> placer_salles(unsigned int nb_salles)
-{
-    vector<Salle> carte;
-    Salle sal;
-
-    cout << "Placement de la salle 0" << endl;
-    sal = random_load(7,"Salles/salle",".txt"); //On place la premiere salle en 0 0
-    carte.push_back(sal);
-    for(unsigned int i=1 ; i<nb_salles ; i++)
-    {
-        cout << "Placement de la salle " << i << endl;
-        sal = random_load(7,"Salles/salle",".txt");
-        sal.placement(&carte);
-        carte.push_back(sal);
-    }
-
-    return carte;
 }

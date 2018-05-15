@@ -9,8 +9,8 @@
 #include <cstdlib>
 #include <ctime>
 
-#define H_M_S 10
-#define L_M_S 10
+#define H_M_S 5
+#define L_M_S 5
 
 using namespace std;
 
@@ -41,6 +41,7 @@ class Salle
         void placement(vector<Salle>* s);
 
         void changer_coord(int x, int y);
+        void supprimer_blocs();
 
         friend void afficher_carte(vector<Salle>* s);
 
@@ -49,8 +50,5 @@ class Salle
         int m_x;
         int m_y;
 };
-
-Salle random_load(int salle_max, string emplacement, string extension);
-vector<Salle> placer_salles(unsigned int nb_salles);
 
 #endif // SALLE_H
