@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <sstream>
+#include <string>
 
 #include "Salle.h"
 
@@ -13,10 +14,14 @@ vector<Salle> placer_salles(unsigned int nb_salles, vector<string> codes_salles)
 
 int main()
 {
-    srand(time(NULL));
+    unsigned int genseed;
+    genseed=time(NULL);
+    genseed=1526457752;
+    srand(genseed);
+    cout<< "seed: " << genseed<<endl;
     vector<Salle> rand_map;
 
-    rand_map = placer_salles(7, charger_fichiers(7, "Salles/salle", ".txt"));
+    rand_map = placer_salles(5, charger_fichiers(7, "Salles/salle", ".txt"));
 
     afficher_carte(&rand_map);
 
@@ -74,7 +79,7 @@ vector<Salle> placer_salles(unsigned int nb_salles, vector<string> codes_salles)
     {
         cout << "Placement de la salle " << i+1 << endl;
         num_sal = rand()%n;
-        cout << num_sal << endl;
+        cout << num_sal+1 << endl;
         sal.genererSalle(codes_salles[num_sal]);
         sal.placement(&carte);
         cout << "Salle placee !" << endl;

@@ -88,14 +88,14 @@ void Salle::placement(vector<Salle>* s)
     bool continuer=true;
     int px,py;
     e=this->m_blocs;
-
+    int i;
     while (continuer)
     {
         cout<<" essai"<<endl;
         px=rand()%(-minx+L_M_S+maxx+L_M_S+1)-minx-L_M_S;
         py=rand()%(-miny+H_M_S+maxy+H_M_S+1)-miny-H_M_S;
         this->changer_coord(px,py);
-        int i=0;
+        i=0;
         continuer=false;
         while (i<e.size() && not(continuer))
         {
@@ -106,10 +106,14 @@ void Salle::placement(vector<Salle>* s)
                     continuer=true;
                 }
             }
-            if ((px+e[i].x-1>=minx && py+e[i].y<maxy && t[px+e[i].x-minx-1][py+e[i].y-miny]==1)
-                || (px+e[i].x+1<maxx && py+e[i].y<maxy && t[px+e[i].x-minx+1][py+e[i].y-miny]==1)
-                || (py+e[i].y-1>=miny && px+e[i].x<maxx && t[px+e[i].x-minx][py+e[i].y-miny-1]==1)
-                || (py+e[i].y+1<maxy && px+e[i].x<maxx && t[px+e[i].x-minx][py+e[i].y-miny+1]==1))
+            if (   (px+e[i].x-1>=minx&& px+e[i].x-1<maxx && py+e[i].y<maxy && t[px+e[i].x-minx-1][py+e[i].y-miny]==1)
+                || (px+e[i].x+1<maxx && py+e[i].y<maxy   && t[px+e[i].x-minx+1][py+e[i].y-miny]==1)
+                || (py+e[i].y-1>=miny&& py+e[i].y-1<maxy && px+e[i].x<maxx && t[px+e[i].x-minx][py+e[i].y-miny-1]==1)
+                || (py+e[i].y+1<maxy && px+e[i].x<maxx   && t[px+e[i].x-minx][py+e[i].y-miny+1]==1)
+                || (px+e[i].x+1<maxx && py+e[i].y+1<maxy && t[px+e[i].x-minx+1][py+e[i].y-miny+1]==1)
+                || (px+e[i].x+1<maxx && py+e[i].y-1<maxy && py+e[i].y-1>=miny && t[px+e[i].x-minx+1][py+e[i].y-miny-1]==1)
+                || (px+e[i].x-1<maxx && py+e[i].y+1<maxy && px+e[i].x-1>=minx && t[px+e[i].x-minx-1][py+e[i].y-miny+1]==1)
+                || (px+e[i].x-1<maxx && py+e[i].y-1<maxy && px+e[i].x-1>=minx && py+e[i].y-1>=miny && t[px+e[i].x-minx-1][py+e[i].y-miny-1]==1))
                     continuer=true;
             i++;
         }
