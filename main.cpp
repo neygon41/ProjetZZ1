@@ -23,6 +23,13 @@ int main()
 
     rand_map = placer_salles(5, charger_fichiers(7, "Salles/salle", ".txt"));
 
+    Salle s1 = rand_map[rand_map.size()-1];
+    Salle s2 = rand_map[rand_map.size()-2];
+    rand_map.pop_back();
+    rand_map.pop_back();
+
+    rand_map.push_back(s1.fusionner_salle(s2));
+    cout<< "NB SALLE VECTOR: " << rand_map.size()<<endl;
     afficher_carte(&rand_map);
 
     return 0;

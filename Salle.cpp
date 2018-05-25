@@ -44,6 +44,10 @@ void Salle::genererSalle(string code)
             cour.type = AIR;
             break;
         }
+        if (cour.type==PORTE)
+        {
+            m_portes.push_back(cour);
+        }
         m_blocs.push_back(cour);
     }
 }
@@ -212,4 +216,39 @@ void afficher_carte(vector<Salle>* s)
         }
         cout << endl;
     }
+}
+
+Salle Salle::fusionner_salle(Salle s2)
+{
+    Salle s3;
+    int x,y;
+    x=min(this->m_x,s2.m_x);
+    y=min(this->m_y,s2.m_y);
+    s3.changer_coord(x,y);
+    for(unsigned int i=0; i<this->m_blocs.size();i++)
+    {
+        this->m_blocs[i].x=this->m_blocs[i].x + this->m_x - x;
+        this->m_blocs[i].y=this->m_blocs[i].y + this->m_y - y;
+        s3.m_blocs.push_back(this->m_blocs[i]);
+    }
+    for(unsigned int i=0; i<s2.m_blocs.size();i++)
+    {
+        s2.m_blocs[i].x=s2.m_blocs[i].x + s2.m_x - x;
+        s2.m_blocs[i].y=s2.m_blocs[i].y + s2.m_y - y;
+        s3.m_blocs.push_back(s2.m_blocs[i]);
+    }
+    for(unsigned int i=0; i<this->m_portes.size();i++)
+    {
+        this->m_portes[i].x=this->m_portes[i].x + this->m_x - x;
+        this->m_portes[i].y=this->m_portes[i].y + this->m_y - y;
+        s3.m_portes.push_back(this->m_portes[i]);
+    }
+    for(unsigned int i=0; i<s2.m_portes.size();i++)
+    {
+        s2.m_portes[i].x=s2.m_portes[i].x + s2.m_x - x;
+        s2.m_portes[i].y=s2.m_portes[i].y + s2.m_y - y;
+        s3.m_portes.push_back(s2.m_portes[i]);
+    }
+
+    return s3;
 }
