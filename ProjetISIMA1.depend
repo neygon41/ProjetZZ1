@@ -32,25 +32,20 @@
 	<vector>
 	"Salle.h"
 
-1527250893 source:c:\users\bastien\desktop\perso\jeuc++\programme\projetzz1\main.cpp
+1526042879 source:c:\users\bastien\desktop\perso\jeuc++\programme\projetzz1\main.cpp
 	<iostream>
 	<vector>
 	<cstdlib>
 	<ctime>
-	<sstream>
-	<string>
 	"Salle.h"
 
-1526460924 c:\users\bastien\desktop\perso\jeuc++\programme\projetzz1\salle.h
+1526034203 c:\users\bastien\desktop\perso\jeuc++\programme\projetzz1\salle.h
 	<iostream>
 	<vector>
 	<string>
-	<fstream>
 	<sstream>
-	<cstdlib>
-	<ctime>
 
-1527251175 source:c:\users\bastien\desktop\perso\jeuc++\programme\projetzz1\salle.cpp
+1526036293 source:c:\users\bastien\desktop\perso\jeuc++\programme\projetzz1\salle.cpp
 	"Salle.h"
 
 1526409535 source:c:\users\fpele\desktop\travail\projet zz1\git\projetzz1\main.cpp

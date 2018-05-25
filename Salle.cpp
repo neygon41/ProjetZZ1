@@ -99,7 +99,6 @@ void Salle::placement(vector<Salle>* s)
         continuer=false;
         while (i<e.size() && not(continuer))
         {
-            /* on verifie que la salle ne soit pas sur une autre */
             if (px+e[i].x<maxx && py+e[i].y<maxy)
             {
                 if (t[px+e[i].x-minx][py+e[i].y-miny]==1)
@@ -107,30 +106,15 @@ void Salle::placement(vector<Salle>* s)
                     continuer=true;
                 }
             }
-            /* on verifie que la salle soit au moins a 1 case d'une autre */
             if (   (px+e[i].x-1>=minx&& px+e[i].x-1<maxx && py+e[i].y<maxy && t[px+e[i].x-minx-1][py+e[i].y-miny]==1)
-                || (px+e[i].x+1<maxx && py+e[i].y < maxy && t[px+e[i].x-minx+1][py+e[i].y-miny]==1)
+                || (px+e[i].x+1<maxx && py+e[i].y<maxy   && t[px+e[i].x-minx+1][py+e[i].y-miny]==1)
                 || (py+e[i].y-1>=miny&& py+e[i].y-1<maxy && px+e[i].x<maxx && t[px+e[i].x-minx][py+e[i].y-miny-1]==1)
-                || (py+e[i].y+1<maxy && px+e[i].x < maxx && t[px+e[i].x-minx][py+e[i].y-miny+1]==1)
+                || (py+e[i].y+1<maxy && px+e[i].x<maxx   && t[px+e[i].x-minx][py+e[i].y-miny+1]==1)
                 || (px+e[i].x+1<maxx && py+e[i].y+1<maxy && t[px+e[i].x-minx+1][py+e[i].y-miny+1]==1)
                 || (px+e[i].x+1<maxx && py+e[i].y-1<maxy && py+e[i].y-1>=miny && t[px+e[i].x-minx+1][py+e[i].y-miny-1]==1)
                 || (px+e[i].x-1<maxx && py+e[i].y+1<maxy && px+e[i].x-1>=minx && t[px+e[i].x-minx-1][py+e[i].y-miny+1]==1)
                 || (px+e[i].x-1<maxx && py+e[i].y-1<maxy && px+e[i].x-1>=minx && py+e[i].y-1>=miny && t[px+e[i].x-minx-1][py+e[i].y-miny-1]==1))
-                {
                     continuer=true;
-                }
-            /* idem mais en considerant les diagonales  */
-            if (   (px+e[i].x-2>=minx&& px+e[i].x-2<maxx && py+e[i].y<maxy && t[px+e[i].x-minx-2][py+e[i].y-miny]==1)
-                || (px+e[i].x+2<maxx && py+e[i].y < maxy && t[px+e[i].x-minx+2][py+e[i].y-miny]==1)
-                || (py+e[i].y-2>=miny&& py+e[i].y-2<maxy && px+e[i].x<maxx && t[px+e[i].x-minx][py+e[i].y-miny-2]==1)
-                || (py+e[i].y+2<maxy && px+e[i].x < maxx && t[px+e[i].x-minx][py+e[i].y-miny+2]==1)
-                || (px+e[i].x+2<maxx && py+e[i].y+2<maxy && t[px+e[i].x-minx+2][py+e[i].y-miny+2]==1)
-                || (px+e[i].x+2<maxx && py+e[i].y-2<maxy && py+e[i].y-2>=miny && t[px+e[i].x-minx+2][py+e[i].y-miny-2]==1)
-                || (px+e[i].x-2<maxx && py+e[i].y+2<maxy && px+e[i].x-2>=minx && t[px+e[i].x-minx-2][py+e[i].y-miny+2]==1)
-                || (px+e[i].x-2<maxx && py+e[i].y-2<maxy && px+e[i].x-2>=minx && py+e[i].y-2>=miny && t[px+e[i].x-minx-2][py+e[i].y-miny-2]==1))
-                {
-                    continuer=true;
-                }
             i++;
         }
     }

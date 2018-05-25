@@ -16,7 +16,7 @@ int main()
 {
     unsigned int genseed;
     genseed=time(NULL);
-    /*genseed=1527059125;*/
+    genseed=1526457752;
     srand(genseed);
     cout<< "seed: " << genseed<<endl;
     vector<Salle> rand_map;
