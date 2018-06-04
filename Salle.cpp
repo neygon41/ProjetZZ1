@@ -252,3 +252,13 @@ Salle Salle::fusionner_salle(Salle s2)
 
     return s3;
 }
+
+int Salle::posx()
+{
+    return (this->m_x);
+}
+
+int Salle::posy()
+{
+    return (this->m_y);
+}
