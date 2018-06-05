@@ -24,12 +24,6 @@ int main()
 
     rand_map = placer_salles(2, charger_fichiers(7, "Salles/salle", ".txt"));
 
-    Salle s1 = rand_map[rand_map.size()-1];
-    Salle s2 = rand_map[rand_map.size()-2];
-    rand_map.pop_back();
-    rand_map.pop_back();
-
-    rand_map.push_back(s1.fusionner_salle(s2));
     cout<< "NB SALLE VECTOR: " << rand_map.size()<<endl;
     afficher_carte(&rand_map);
 
@@ -106,13 +100,13 @@ vector<Salle> placer_salles(unsigned int nb_salles, vector<string> codes_salles)
 void creer_couloir(vector<Salle> * carte)
 {
     /* choix de la porte de depart! */
-    int sp1i=rand()%carte->size(), sp2i=0;
+    int sp1i=rand()%(carte->size()), sp2i=0;
     Salle sp1 = (*carte)[sp1i];
     int nb_porte= sp1.m_portes.size();
     int num_porte=rand()%nb_porte;
     Bloc ported= sp1.m_portes[num_porte];
     bool continuer=true;
-    int i=0, x=ported.x, y=ported.y;
+    int i=0, x=ported.x+sp1.posx(), y=ported.y+sp1.posy();
     int maximum, minimum;
 
     /* initialisation matrice */
@@ -120,7 +114,9 @@ void creer_couloir(vector<Salle> * carte)
     vector<Bloc> e;
 
     /* "suppression" de la porte de travail */
+    cout << "carte : " << carte->size()<<endl;
     (*carte)[sp1i].m_portes.erase((*carte)[sp1i].m_portes.begin() + num_porte);
+    cout << "carte2 : " << carte->size()<<endl;
 
     for(unsigned int i=0; i<(carte->size()); i++)
     {
@@ -135,6 +131,7 @@ void creer_couloir(vector<Salle> * carte)
         }
     }
 
+    /* initialisation tableau */
     int t[maxx-minx+3][maxy-miny+3];
     maximum=(maxy-miny+3)*(maxx-minx+3);
     for(int i=0; i<maxx-minx+3; i++)
@@ -142,6 +139,8 @@ void creer_couloir(vector<Salle> * carte)
         for(int j=0; j<maxy-miny+3; j++)
             t[i][j]=maximum;
     }
+
+
     for(unsigned int i=0; i<carte->size(); i++)
     {
         Salle sal=(*carte)[i];
@@ -150,60 +149,89 @@ void creer_couloir(vector<Salle> * carte)
         {
             if(e[j].type != VIDE)
             {
-                t[sal.posx()+e[j].x-minx+1][sal.posy()+e[j].y-miny+1]=-1;
+
+                if ( e[j].type != PORTE)
+                {
+                    t[sal.posx()+e[j].x-minx+1][sal.posy()+e[j].y-miny+1]=-1;
+                }
+                else
+                {
+                    if (e[j].type == PORTE && i!=sp1i)
+                    {
+                        t[sal.posx()+e[j].x-minx+1][sal.posy()+e[j].y-miny+1]=-2;
+                    }
+                    else if ((e[j].type == PORTE && i==sp1i))
+                    {
+                        t[sal.posx()+e[j].x-minx+1][sal.posy()+e[j].y-miny+1]=-1;
+                    }
+                }
             }
         }
     }
+
     /* case portes */
-    for(unsigned int i=0; i<(carte->size()); i++)
+
+    for(int i=0; i<maxx-minx+3; i++)
     {
-        Salle sal=(*carte)[i];
-        e=sal.m_portes;
-        for(unsigned int j=0; j<(e.size()); j++)
-        {
-            if (i!=sp1i)
-                t[e[j].x-minx+1][e[j].y-miny+1]=-2;
+        for(int j=0; j<maxy-miny+3; j++)
+            if (t[j][i]==maximum)
+            {
+                cout<< "  "<<" ";
+            }
             else
-                t[e[j].x-minx+1][e[j].y-miny+1]=-1;
-        }
+            {
+                    if (t[j][i]>=0 && t[j][i]<10)
+                    {cout<< t[j][i]<<"  ";}
+                    else
+                    {
+                        cout<< t[j][i]<<" ";
+                    }
+            }
+        cout << endl;
     }
     /* case de départ */
-    t[x+1][y+1]=0;
+    t[x+1-minx][y+1-miny]=0;
     e=sp1.m_portes;
-
+    i=0;
     /* boucle principale */
     while (continuer)
     {
-        cout<< "boucle"<<endl;
+        cout<< "i: "<< i<<endl;
         x=-1;
-        while(x<maxx-minx+3 && continuer)
+        while(x<maxx-minx+3-1 && continuer)
         {
             x++;
             y=-1;
-            while(y<maxy-miny+3 && continuer)
+            while(y<maxy-miny+3-1 && continuer)
             {
                 y++;
                 if (t[x][y]==i)
                 {
+                    cout<< i << " trouvé"<<endl;
                     minimum = maximum;
+                    cout << "e size : "<<e.size()<<endl;
                     if (x-1>0 )
                     {
                         if(t[x-1][y]>=0)
                         {
                             minimum= min(minimum,t[x-1][y]);
                         }
-                        else if (t[x-1][y]==-2)
+                        else
                         {
-                            continuer = false;
-                            for(unsigned int j=0; j<(e.size()); j++)
+                            if (t[x-1][y]==-2)
                             {
-                                if(e[j].x+1 == x-1-minx && e[j].y+1 == y-miny)
+                                continuer = false;
+                                for(unsigned int j=0; j<=(e.size()); j++)
                                 {
-                                    continuer = true;
+                                    cout<<"porte x: "<<e[j].x<<" porte y: "<<e[j].y<<" x "<<x-1+minx-1<<"y"<<y+miny-1<<endl;
+                                    if(sp1.posx()+e[j].x == x-1+minx-1 && sp1.posy()+e[j].y == y+miny-1)
+                                    {
+                                        continuer = true;
+                                    }
                                 }
+                                if (not(continuer))
+                                    x-=1;
                             }
-                            if (not(continuer))
-                                x-=1;
                         }
                     }
                     if (y-1>0 && continuer)
@@ -212,17 +240,21 @@ void creer_couloir(vector<Salle> * carte)
                         {
                             minimum= min(minimum,t[x][y-1]);
                         }
-                        else if (t[x][y-1]==-2)
+                        else
                         {
-                            for(unsigned int j=0; j<(e.size()); j++)
+                            if (t[x][y-1]==-2)
                             {
-                                continuer =false;
-                                if(e[j].x+1 == x-minx && e[j].y+1 == y-1-miny)
+                                for(unsigned int j=0; j<=(e.size()); j++)
                                 {
-                                    continuer = true;
+                                    continuer =false;
+                                    if(sp1.posx()+e[j].x == x+minx-1 && sp1.posy()+e[j].y == y-1+miny-1)
+                                    {
+                                        cout<<"porte x: "<< e[j].x << " porte y: " << e[j].y<< " x "<< x+minx-1 << "y" << y-1+miny-1 <<endl;
+                                        continuer = true;
+                                    }
+                                    if (not(continuer))
+                                        y-=1;
                                 }
-                                if (not(continuer))
-                                    y-=1;
                             }
                         }
                     }
@@ -232,17 +264,21 @@ void creer_couloir(vector<Salle> * carte)
                         {
                             minimum= min(minimum,t[x+1][y]);
                         }
-                        else if (t[x+1][y]==-2)
+                        else
                         {
-                            for(unsigned int j=0; j<(e.size()); j++)
+                            if (t[x+1][y]==-2)
                             {
-                                continuer =false;
-                                if(e[j].x+1 == x+1-minx && e[j].y+1 == y-miny)
+                                for(unsigned int j=0; j<=(e.size()); j++)
                                 {
-                                    continuer = true;
+                                    continuer =false;
+                                    if(sp1.posx()+e[j].x == x+1+minx-1 && sp1.posy()+e[j].y == y+miny-1)
+                                    {
+                                        continuer = true;
+                                        cout<<"porte x: "<< e[j].x << " porte y: " << e[j].y<< " x "<< x+1+minx-1 << "y" << y+miny-1 <<endl;
+                                    }
+                                    if (not(continuer))
+                                        x+=1;
                                 }
-                                if (not(continuer))
-                                    x+=1;
                             }
                         }
                     }
@@ -252,53 +288,59 @@ void creer_couloir(vector<Salle> * carte)
                         {
                             minimum= min(minimum,t[x][y+1]);
                         }
-                        else if (t[x][y+1]==-2)
+                        else
                         {
-                            for(unsigned int j=0; j<(e.size()); j++)
+                            if (t[x][y+1]==-2)
                             {
-                                continuer =false;
-                                if(e[j].x+1 == x-minx && e[j].y+1 == y+1-miny)
+                                for(unsigned int j=0; j<=(e.size()); j++)
                                 {
-                                    continuer = true;
+                                    continuer =false;
+                                    if(sp1.posx()+e[j].x == x+minx-1 && sp1.posy()+e[j].y == y+1+miny-1)
+                                    {
+                                        continuer = true;
+                                        cout<<"porte x: "<< e[j].x << " porte y: " << e[j].y<< " x "<< x+minx-1 << "y" << y+1+miny-1 <<endl;
+                                    }
+                                    if (not(continuer))
+                                        y+=1;
                                 }
-                                if (not(continuer))
-                                    y+=1;
                             }
                         }
                     }
 
                     /* avancement */
-                    if (x-1>=0)
+                    if (continuer)
                     {
-                        if (x+1<maxx-minx+3 && t[x+1][y]==minimum)
-                            t[x-1][y]=min(t[x-1][y], i+1);
-                        else
-                            t[x-1][y]=min(t[x-1][y], i+2);
-                    }
-                    if (x+1<=maxx-minx+3)
-                    {
-                        if (x>0 && t[x-1][y]==minimum)
-                            t[x+1][y]=min(t[x+1][y], i+1);
-                        else
-                            t[x+1][y]=min(t[x+1][y], i+2);
-                    }
-                    if (y-1>=0)
-                    {
-                        if (y+1<maxy-miny+3 && t[x][y+1]==minimum)
-                            t[x][y-1]=min(t[x][y-1], i+1);
-                        else
-                            t[x][y-1]=min(t[x][y-1], i+2);
-                    }
-                    if (y+1<maxy-miny+3)
-                    {
-                        if (y>0 && t[x][y-1]==minimum)
-                            t[x][y+1]=min(t[x][y+1], i+1);
-                        else
-                            t[x][y+1]=min(t[x][y+1], i+2);
+                        if (x-1>=0)
+                        {
+                            if (x+1<maxx-minx+3 && t[x+1][y]==minimum)
+                                t[x-1][y]=min(t[x-1][y], i+1);
+                            else
+                                t[x-1][y]=min(t[x-1][y], i+2);
+                        }
+                        if (x+1<maxx-minx+3)
+                        {
+                            if (x>0 && t[x-1][y]==minimum)
+                                t[x+1][y]=min(t[x+1][y], i+1);
+                            else
+                                t[x+1][y]=min(t[x+1][y], i+2);
+                        }
+                        if (y-1>=0)
+                        {
+                            if (y+1<maxy-miny+3 && t[x][y+1]==minimum)
+                                t[x][y-1]=min(t[x][y-1], i+1);
+                            else
+                                t[x][y-1]=min(t[x][y-1], i+2);
+                        }
+                        if (y+1<maxy-miny+3)
+                        {
+                            if (y>0 && t[x][y-1]==minimum)
+                                t[x][y+1]=min(t[x][y+1], i+1);
+                            else
+                                t[x][y+1]=min(t[x][y+1], i+2);
+                        }
                     }
                 }
             }
-
         }
         i++;
     }
@@ -310,7 +352,7 @@ void creer_couloir(vector<Salle> * carte)
     {
         for( unsigned int j =0; j<(*carte)[k].m_portes.size();j++)
         {
-            if ((*carte)[k].m_portes[j].x ==x-1-minx && (*carte)[k].m_portes[j].y == y-1-minx)
+            if ((*carte)[k].m_portes[j].x ==x-1-minx && (*carte)[k].m_portes[j].y == y-1-miny)
             {
                 sp2i=k;
                 continuer = false;
@@ -325,21 +367,21 @@ void creer_couloir(vector<Salle> * carte)
     Salle couloir;
     Bloc c;
     c.type=AIR;
-    couloir.changer_coord(min(x,ported.x)-minx-1,min(y,ported.y)-minx-1);
+    couloir.changer_coord(min(x,ported.x)-minx-2,min(y,ported.y)-minx-2);
 
     while (t[x][y]!=0)
     {
-        cout << "x,y :"<<x << " "<<y<<endl;
-        cout << "minimum :" << minimum<< endl;
-        cout << "t[x][y]:"<<t[x][y]<<endl;
-        cout << "t[x-1][y]:"<<t[x-1][y]<<endl;
-        cout << "t[x+1][y]:"<<t[x+1][y]<<endl;
-        cout << "t[x][y-1]:"<<t[x][y-1]<<endl;
-        cout << "t[x][y+1]:"<<t[x][y+1]<<endl;
         for(int i=0; i<maxx-minx+3; i++)
         {
             for(int j=0; j<maxy-miny+3; j++)
-                cout<< t[i][j]<< " ";
+                if (t[i][j]==maximum)
+                {
+                    cout<< "  "<< " ";
+                }
+                else
+                {
+                    cout<< t[i][j]<< " ";
+                }
             cout<<endl;
         }
 
@@ -388,21 +430,44 @@ void creer_couloir(vector<Salle> * carte)
                 }
             }
         }
-        c.x=x-1;
-        c.y=y-1;
+        c.x=x-1-couloir.posx();
+        c.y=y-1-couloir.posy();
         couloir.m_blocs.push_back(c);
     }
 
+    /* pour eviter la redefinition d'une porte */
+    couloir.m_blocs.pop_back();
 
     for (unsigned int j =0;j<couloir.m_blocs.size(); j++ )
-        t[couloir.m_blocs[j].x+1][couloir.m_blocs[j].y+1]=-1;
+        t[couloir.m_blocs[j].x+1-minx+couloir.posx()][couloir.m_blocs[j].y+1-miny+couloir.posy()]=-1;
+
+    for(int i=0; i<maxx-minx+3-1; i++)
+    {
+        for(int j=0; j<=maxy-miny+3; j++)
+            if (t[j][i]==maximum)
+            {
+                cout<< "  "<<" ";
+            }
+            else
+            {
+                    if (t[j][i]>=0 && t[j][i]<10)
+                    {cout<< t[j][i]<<"  ";}
+                    else
+                    {
+                        cout<< t[j][i]<<" ";
+                    }
+            }
+        cout << endl;
+    }
+
 
     /*création des murs */
     c.type=MUR;
-    for (unsigned int j=0; j<couloir.m_blocs.size();j++)
+    int taille_couloir = couloir.m_blocs.size();
+    for (unsigned int j=0; j<taille_couloir;j++)
     {
-        x = couloir.m_blocs[j].x+1;
-        y = couloir.m_blocs[j].y+1;
+        x = couloir.m_blocs[j].x+1-minx;
+        y = couloir.m_blocs[j].y+1-miny;
         if ((x-1>=0 && t[x-1][y]>0) || x-1<0)
         {
             c.x=x-2; c.y=y-1;
@@ -445,11 +510,12 @@ void creer_couloir(vector<Salle> * carte)
             couloir.m_blocs.push_back(c);
         }
     }
-
     /* fusion des salles */
     Salle s3=(*carte)[min(sp2i,sp1i)].fusionner_salle((*carte)[max(sp2i,sp1i)]);
     s3=s3.fusionner_salle(couloir);
     carte->push_back(s3);
     carte->erase(carte->begin() + max(sp1i,sp2i));
     carte->erase(carte->begin() + min(sp1i,sp2i));
+
+
 }

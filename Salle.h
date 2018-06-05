@@ -19,7 +19,7 @@ typedef enum
     VIDE,
     AIR,
     MUR,
-    PORTE
+    PORTE,
 }Type_Bloc;
 
 typedef struct
