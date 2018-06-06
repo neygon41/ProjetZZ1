@@ -39,14 +39,11 @@ void Salle::genererSalle(string code)
             break;
         case PORTE:
             cour.type = PORTE;
+            m_portes.push_back(cour);
             break;
         default:
             cour.type = AIR;
             break;
-        }
-        if (cour.type==PORTE)
-        {
-            m_portes.push_back(cour);
         }
         m_blocs.push_back(cour);
     }
@@ -149,6 +146,7 @@ void Salle::changer_coord(int x, int y)
 void Salle::supprimer_blocs()
 {
     m_blocs.clear();
+    m_portes.clear();
 }
 
 void Salle::afficherSalle()
