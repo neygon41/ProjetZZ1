@@ -17,12 +17,12 @@ int main()
 {
     unsigned int genseed;
     genseed=time(NULL);
-    /*genseed=1527059125;*/
+    /*genseed=1528709861;*/
     srand(genseed);
     cout<< "seed: " << genseed<<endl;
     vector<Salle> rand_map;
 
-    rand_map = placer_salles(7, charger_fichiers(7, "Salles/salle", ".txt"));
+    rand_map = placer_salles(15, charger_fichiers(7, "Salles/salle", ".txt"));
 
     cout<< "NB SALLE VECTOR: " << rand_map.size()<<endl;
     afficher_carte(&rand_map);
@@ -176,7 +176,7 @@ void creer_couloir(vector<Salle> * carte)
     }
 
     /* case portes */
-
+    /*
     for(int i=0; i<maxy-miny+3; i++)
     {
         for(int j=0; j<maxx-minx+3; j++)
@@ -194,16 +194,18 @@ void creer_couloir(vector<Salle> * carte)
                     }
             }
         cout << endl;
-    }
+    }*/
+
     /* case de départ */
     t[x][y]=0;
     e=sp1.m_portes;
-    cout << e.size()<<endl;
+    cout << "nb porte salle depart: " << e.size()<<endl;
     i=0;
+
     /* boucle principale */
     while (continuer)
     {
-        cout<< "i: "<< i<<endl;
+        /*cout<< "i: "<< i<<endl;*/
         x=-1;
         while(x<maxx-minx+3-1 && continuer)
         {
@@ -349,29 +351,33 @@ void creer_couloir(vector<Salle> * carte)
         i++;
     }
 
-    /*for(int i=0; i<maxy-miny+3; i++)
+    /* affichage de l'etape */
+    /*
+    for(int i=0; i<maxy-miny+3; i++)
     {
         for(int j=0; j<maxx-minx+3; j++)
+        {
             if (t[j][i]==maximum)
             {
-                cout<< "  "<<" ";
+                cout<< "  "<<"";
             }
             else
             {
                     if (t[j][i]>=0 && t[j][i]<10)
-                    {cout<< t[j][i]<<"  ";}
+                    {cout<< t[j][i]<<" ";}
                     else
                     {
-                        cout<< t[j][i]<<" ";
+                        cout<< t[j][i]<<"";
                     }
             }
+        }
         cout << endl;
     }*/
 
     /* recherche de la salle correspondant a la porte trouvee */
     int k=0;
     continuer = true;
-    cout<<"t[x][y] porte:"<<t[x][y] <<endl;
+    /*cout<<"t[x][y] porte:"<<t[x][y] <<endl;*/
     while (k<carte->size() && continuer )
     {
         sp2 = (*carte)[k];
@@ -398,7 +404,7 @@ void creer_couloir(vector<Salle> * carte)
     cout<<"parcours"<<endl;
     while (t[x][y]!=0 && t[x][y]!=-3)
     {
-        cout << "t[x][y]: " << t[x][y] <<" x: " <<x <<" y: "<<y <<endl;
+        /*cout << "t[x][y]: " << t[x][y] <<" x: " <<x <<" y: "<<y <<endl;*/
         /* recherche du minimum dans les cases adjacentes */
         minimum = maximum;
         if (x-1>=0 && t[x-1][y]!=-1 && t[x-1][y]!=-2)
@@ -419,13 +425,13 @@ void creer_couloir(vector<Salle> * carte)
         }
 
         /* on s'y dirige */
-        if (x-1>0 && t[x-1][y]==minimum)
+        if (x-1>=0 && t[x-1][y]==minimum)
         {
             x-=1;
         }
         else
         {
-            if (y-1>0 && t[x][y-1]==minimum)
+            if (y-1>=0 && t[x][y-1]==minimum)
             {
                 y-=1;
             }
@@ -445,7 +451,7 @@ void creer_couloir(vector<Salle> * carte)
             }
         }
         c.x=x-1-couloir.posx()+minx;
-        c.y=y-1-couloir.posy()+minx;
+        c.y=y-1-couloir.posy()+miny;
         couloir.m_blocs.push_back(c);
     }
     cout<<"question"<<endl;
