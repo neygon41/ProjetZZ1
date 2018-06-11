@@ -19,7 +19,7 @@ typedef enum
     VIDE,
     AIR,
     MUR,
-    PORTE
+    PORTE,
 }Type_Bloc;
 
 typedef struct
@@ -45,8 +45,13 @@ class Salle
 
         friend void afficher_carte(vector<Salle>* s);
 
-    private:
+        Salle fusionner_salle( Salle s2);
+        int posx();
+        int posy();
+        vector<Bloc> m_portes;
         vector<Bloc> m_blocs;
+
+    private:
         int m_x;
         int m_y;
 };
