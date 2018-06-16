@@ -45,7 +45,10 @@ class Salle
 
         friend void afficher_carte(vector<Salle>* s);
 
-        Salle fusionner_salle( Salle s2);
+        Salle fusionner_salle(Salle s2);
+
+        void boucher_portes();
+
         int posx();
         int posy();
         vector<Bloc> m_portes;

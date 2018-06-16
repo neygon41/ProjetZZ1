@@ -20,7 +20,7 @@ Salle::~Salle()
 
 void Salle::genererSalle(string code)
 {
-    istringstream iss(code); //Flux sur le code
+    istringstream iss(code); //Flux sur le cod
     int code_bloc, pos_x, pos_y; //Les 3 infos a collecter pour chaque bloc
     Bloc cour; //Le bloc courant (qui va etre ajoute a la salle)
 
@@ -153,6 +153,25 @@ void Salle::afficherSalle()
 {
     for(unsigned int i = 0 ; i < m_blocs.size() ; i++)
         cout << m_blocs[i].type << " " << m_blocs[i].x << " " << m_blocs[i].y << endl;
+}
+
+void Salle::boucher_portes()
+{
+    int k;
+
+    for(unsigned int i=0 ; i < m_portes.size() ; i++)
+    {
+        cout << "Boucher porte : " << m_portes[i].x << "," << m_portes[i].y << endl;
+        for(unsigned int j=0 ; j < m_blocs.size() ; j++)
+        {
+            if(m_portes[i].x == m_blocs[j].x && m_portes[i].y == m_blocs[j].y)
+            {
+                k = j;
+            }
+        }
+        cout << "                " << m_blocs[k].x << "," << m_blocs[k].y << endl;
+        m_blocs[k].type = MUR;
+    }
 }
 
 //Fonction amie de Salle

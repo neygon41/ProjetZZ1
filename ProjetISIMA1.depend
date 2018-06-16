@@ -53,15 +53,16 @@
 1528316260 source:c:\users\bastien\desktop\perso\jeuc++\programme\projetzz1\salle.cpp
 	"Salle.h"
 
-1526409535 source:c:\users\fpele\desktop\travail\projet zz1\git\projetzz1\main.cpp
+1529175149 source:c:\users\fpele\desktop\travail\projet zz1\git\projetzz1\main.cpp
 	<iostream>
 	<vector>
 	<cstdlib>
 	<ctime>
 	<sstream>
+	<string>
 	"Salle.h"
 
-1526409596 c:\users\fpele\desktop\travail\projet zz1\git\projetzz1\salle.h
+1529171855 c:\users\fpele\desktop\travail\projet zz1\git\projetzz1\salle.h
 	<iostream>
 	<vector>
 	<string>
@@ -70,6 +71,6 @@
 	<cstdlib>
 	<ctime>
 
-1526409127 source:c:\users\fpele\desktop\travail\projet zz1\git\projetzz1\salle.cpp
+1529174989 source:c:\users\fpele\desktop\travail\projet zz1\git\projetzz1\salle.cpp
 	"Salle.h"
 

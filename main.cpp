@@ -22,7 +22,7 @@ int main()
     cout<< "seed: " << genseed<<endl;
     vector<Salle> rand_map;
 
-    rand_map = placer_salles(15, charger_fichiers(7, "Salles/salle", ".txt"));
+    rand_map = placer_salles(5, charger_fichiers(7, "Salles/salle", ".txt"));
 
     cout<< "NB SALLE VECTOR: " << rand_map.size()<<endl;
     afficher_carte(&rand_map);
@@ -33,6 +33,8 @@ int main()
         creer_couloir(&rand_map);
         cout << "couloir" << endl;
     }
+    for(int i=0 ; i < rand_map.size() ; i++)
+        rand_map[i].boucher_portes();
     afficher_carte(&rand_map);
 
     return 0;
