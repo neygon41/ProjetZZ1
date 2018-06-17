@@ -462,7 +462,7 @@ void creer_couloir(vector<Salle> * carte)
     {
         for( unsigned int j =0; j<=(*carte)[sp1i].m_portes.size();j++)
         {
-            if ((*carte)[sp1i].posx()+(*carte)[sp1i].m_portes[j].x ==x-1-minx && (*carte)[sp1i].posy()+(*carte)[sp1i].m_portes[j].y == y-1-miny)
+            if ((*carte)[sp1i].posx()+(*carte)[sp1i].m_portes[j].x ==x-1+minx && (*carte)[sp1i].posy()+(*carte)[sp1i].m_portes[j].y == y-1+miny)
             {
                 num_porte=j;
             }
