@@ -49,14 +49,23 @@ class Salle
 
         void boucher_portes();
 
+        void ajouter_bloc(Bloc b);
+        void rendre_porte_indisponible(int num_porte);
+        void supprimer_dernier_bloc();
+
+        //ACCESSEURS
         int posx();
         int posy();
-        vector<Bloc> m_portes;
-        vector<Bloc> m_blocs;
+        vector<Bloc> blocs_salle();
+        unsigned int nb_blocs();
+        vector<Bloc> portes_salle();
+        unsigned int nb_portes();
 
     private:
         int m_x;
         int m_y;
+        vector<Bloc> m_portes;
+        vector<Bloc> m_blocs;
 };
 
 #endif // SALLE_H

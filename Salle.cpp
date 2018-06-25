@@ -279,3 +279,38 @@ int Salle::posy()
 {
     return (this->m_y);
 }
+
+unsigned int Salle::nb_portes()
+{
+    return m_portes.size();
+}
+
+vector<Bloc> Salle::blocs_salle()
+{
+    return m_blocs;
+}
+
+vector<Bloc> Salle::portes_salle()
+{
+    return m_portes;
+}
+
+void Salle::ajouter_bloc(Bloc b)
+{
+    m_blocs.push_back(b);
+}
+
+void Salle::rendre_porte_indisponible(int num_porte)
+{
+    m_portes.erase(m_portes.begin() + num_porte);
+}
+
+unsigned int Salle::nb_blocs()
+{
+    return m_blocs.size();
+}
+
+void Salle::supprimer_dernier_bloc()
+{
+    m_blocs.pop_back();
+}

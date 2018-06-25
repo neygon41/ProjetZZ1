@@ -17,7 +17,7 @@ int main()
 {
     unsigned int genseed;
     int nb_salles_disponibles = 7;
-    int nb_salles_a_placer = 12;
+    int nb_salles_a_placer = 3;
     bool alea_seed = true;
 
     if(alea_seed)
@@ -111,9 +111,9 @@ void creer_couloir(vector<Salle> * carte)
     /* choix de la porte de depart! */
     int sp1i=rand()%(carte->size()), sp2i;
     Salle sp1 = (*carte)[sp1i], sp2;
-    int nb_porte= sp1.m_portes.size();
+    int nb_porte= sp1.nb_portes();
     int num_porte=rand()%nb_porte;
-    Bloc ported= sp1.m_portes[num_porte];
+    Bloc ported= sp1.portes_salle()[num_porte];
     bool continuer=true;
     int i=0;
     int maximum, minimum;
@@ -125,7 +125,7 @@ void creer_couloir(vector<Salle> * carte)
     for(unsigned int i=0; i<(carte->size()); i++)
     {
         Salle sal=(*carte)[i];
-        e=sal.m_blocs;
+        e=sal.blocs_salle();
         for(unsigned int j=0; j<(e.size()); j++)
         {
             minx=min(minx,sal.posx() + e[j].x);
@@ -150,7 +150,7 @@ void creer_couloir(vector<Salle> * carte)
     for(unsigned int i=0; i<carte->size(); i++)
     {
         Salle sal=(*carte)[i];
-        e=sal.m_blocs;
+        e=sal.blocs_salle();
         for(unsigned int j=0; j<(e.size()); j++)
         {
             if(e[j].type != VIDE)
@@ -167,7 +167,7 @@ void creer_couloir(vector<Salle> * carte)
     for(unsigned int i=0; i<carte->size(); i++)
     {
         Salle sal=(*carte)[i];
-        e=sal.m_portes;
+        e=sal.portes_salle();
         for(unsigned int j=0; j<(e.size()); j++)
         {
             if (i!=sp1i)
@@ -204,7 +204,7 @@ void creer_couloir(vector<Salle> * carte)
 
     /* case de départ */
     t[x][y]=0;
-    e=sp1.m_portes;
+    e=sp1.portes_salle();
     cout << "nb porte salle depart: " << e.size()<<endl;
     i=0;
 
@@ -387,15 +387,15 @@ void creer_couloir(vector<Salle> * carte)
     while (k<carte->size() && continuer )
     {
         sp2 = (*carte)[k];
-        e=sp2.m_portes;
-        for( unsigned int j =0; j<sp2.m_portes.size();j++)
+        e=sp2.portes_salle();
+        for( unsigned int j =0; j<sp2.nb_portes();j++)
         {
             if (sp2.posx()+e[j].x == x+minx-1 && sp2.posy()+e[j].y == y+miny-1)
             {
                 continuer = false;
                 sp2i=k;
                 /* "suppression" de la porte trouvee */
-                (*carte)[k].m_portes.erase((*carte)[k].m_portes.begin() + j);
+                (*carte)[k].rendre_porte_indisponible(j);
             }
         }
         k++;
@@ -458,15 +458,15 @@ void creer_couloir(vector<Salle> * carte)
         }
         c.x=x-1-couloir.posx()+minx;
         c.y=y-1-couloir.posy()+miny;
-        couloir.m_blocs.push_back(c);
+        couloir.ajouter_bloc(c);
     }
     cout<<"question"<<endl;
     /* si on passe a cote d'une autre porte de la premiere salle, cette porte deviens celle d'origine*/
     if (t[x][y]==-3)
     {
-        for( unsigned int j =0; j<=(*carte)[sp1i].m_portes.size();j++)
+        for( unsigned int j =0; j<=(*carte)[sp1i].nb_portes();j++)
         {
-            if ((*carte)[sp1i].posx()+(*carte)[sp1i].m_portes[j].x ==x-1+minx && (*carte)[sp1i].posy()+(*carte)[sp1i].m_portes[j].y == y-1+miny)
+            if ((*carte)[sp1i].posx()+(*carte)[sp1i].portes_salle()[j].x ==x-1+minx && (*carte)[sp1i].posy()+(*carte)[sp1i].portes_salle()[j].y == y-1+miny)
             {
                 num_porte=j;
             }
@@ -474,62 +474,62 @@ void creer_couloir(vector<Salle> * carte)
     }
     cout<<"bon"<<endl;
     /* "suppression" de porte de la premiere salle trouvee */
-    (*carte)[sp1i].m_portes.erase((*carte)[sp1i].m_portes.begin() + num_porte);
+    (*carte)[sp1i].rendre_porte_indisponible(num_porte);
     cout<<"pif"<<endl;
     /* pour eviter la redefinition d'une porte */
-    couloir.m_blocs.pop_back();
+    couloir.supprimer_dernier_bloc();
 
-    for (unsigned int j =0;j<couloir.m_blocs.size(); j++ )
-        t[couloir.m_blocs[j].x+1-minx+couloir.posx()][couloir.m_blocs[j].y+1-miny+couloir.posy()]=-1;
+    for (unsigned int j =0;j<couloir.nb_blocs(); j++ )
+        t[couloir.blocs_salle()[j].x+1-minx+couloir.posx()][couloir.blocs_salle()[j].y+1-miny+couloir.posy()]=-1;
     cout<<"express"<<endl;
 
     /*création des murs */
     c.type=MUR;
-    int taille_couloir = couloir.m_blocs.size();
+    int taille_couloir = couloir.nb_blocs();
     for (unsigned int j=0; j<taille_couloir;j++)
     {
-        x = couloir.m_blocs[j].x+1-minx+couloir.posx();
-        y = couloir.m_blocs[j].y+1-miny+couloir.posy();
+        x = couloir.blocs_salle()[j].x+1-minx+couloir.posx();
+        y = couloir.blocs_salle()[j].y+1-miny+couloir.posy();
         if ((x-1>=0 && t[x-1][y]>0) || x-1<0)
         {
             c.x=x-1-couloir.posx()+minx-1; c.y=y-couloir.posy()+miny-1;
-            couloir.m_blocs.push_back(c);
+            couloir.ajouter_bloc(c);
         }
         if ((y-1>=0 && t[x][y-1]>0) || y-1<0)
         {
             c.x=x-couloir.posx()+minx-1; c.y=y-1-couloir.posy()+miny-1;
-            couloir.m_blocs.push_back(c);
+            couloir.ajouter_bloc(c);
         }
         if ((x+1<maxx-minx+3 && t[x+1][y]>0) || x+1>maxx-minx+3)
         {
             c.x=x+1-couloir.posx()+minx-1; c.y=y-couloir.posy()+miny-1;
-            couloir.m_blocs.push_back(c);
+            couloir.ajouter_bloc(c);
         }
         if ((y+1<maxy-miny+3 && t[x][y+1]>0) || y+1>maxy-miny+3)
         {
             c.x=x-couloir.posx()+minx-1; c.y=y+1-couloir.posy()+miny-1;
-            couloir.m_blocs.push_back(c);
+            couloir.ajouter_bloc(c);
         }
 
         if ( y+1>=maxy-miny+3 || x+1>=maxx-minx+3 || (y+1<maxy-miny+3 && x+1<maxx-minx+3 && t[x+1][y+1]>0))
         {
             c.x=x+1-couloir.posx()+minx-1; c.y=y+1-couloir.posy()+miny-1;
-            couloir.m_blocs.push_back(c);
+            couloir.ajouter_bloc(c);
         }
         if ( y+1>=maxy-miny+3 || x-1<0 || (y+1<maxy-miny+3 && x-1>=0 && t[x-1][y+1]>0))
         {
             c.x=x-1-couloir.posx()+minx-1; c.y=y+1-couloir.posy()+miny-1;
-            couloir.m_blocs.push_back(c);
+            couloir.ajouter_bloc(c);
         }
         if ( y-1<0 || x+1>=maxx-minx+3 || (y-1>=0 && x+1<maxx-minx+3 && t[x+1][y-1]>0))
         {
             c.x=x+1-couloir.posx()+minx-1; c.y=y-1-couloir.posy()+miny-1;
-            couloir.m_blocs.push_back(c);
+            couloir.ajouter_bloc(c);
         }
         if ( y-1<0 || x-1<0 || (y-1>=0 && x-1>=0 && t[x-1][y-1]>0))
         {
             c.x=x-1-couloir.posx()+minx-1; c.y=y-1-couloir.posy()+miny-1;
-            couloir.m_blocs.push_back(c);
+            couloir.ajouter_bloc(c);
         }
     }
 
