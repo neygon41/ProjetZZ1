@@ -16,13 +16,17 @@ void creer_couloir(vector<Salle> * carte);
 int main()
 {
     unsigned int genseed;
-    genseed=time(NULL);
-    /*genseed=1528709861;*/
+    int nb_salles_disponibles = 7;
+    int nb_salles_a_placer = 12;
+    bool alea_seed = true;
+
+    if(alea_seed)
+        genseed=time(NULL);
     srand(genseed);
     cout<< "seed: " << genseed<<endl;
     vector<Salle> rand_map;
 
-    rand_map = placer_salles(5, charger_fichiers(7, "Salles/salle", ".txt"));
+    rand_map = placer_salles(nb_salles_a_placer, charger_fichiers(nb_salles_disponibles, "Salles/salle", ".txt"));
 
     cout<< "NB SALLE VECTOR: " << rand_map.size()<<endl;
     afficher_carte(&rand_map);
